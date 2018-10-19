@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>BakeMeOnTheWeb</title>
+</h:head>
+<h:body>
+    <h:form>
+        <p:growl id="msgs" showDetail="true" autoUpdate="true"/>
+
+        <p:outputLabel for="datePicker" value="Waehlen Sie Ihren Backtag: "/>
+        <p:calendar id="datePicker" locale="de" value="#{indexController.bakeDate}">
+            <p:ajax event="dateSelect" listener="#{indexController.onDateSelect}" update="recipeSelection"/>
+        </p:calendar>
+
+        <br/><br/>
+
+        <p:selectOneMenu id="recipeSelection"
+                         value="#{indexController.selectedRecipe}"
+                         converter="#{recipeConverter}">
+            <p:ajax
+                    listener="#{indexController.onRecipeSelect}"
+                    update="recipeOutput"/>
+            <f:selectItem itemLabel="Waehlen Sie ein Rezept" value="#{null}" noSelectionOption="true"/>
+            <f:selectItems value="#{indexController.availableRecipes}"
+                           var="recipe"
+                           itemValue="#{recipe}"
+                           itemLabel="#{recipe.name}">
+            </f:selectItems>
+
+        </p:selectOneMenu>
+    </h:form>
+
+    <p:panelGrid id="recipeOutput" columns="1">
+        <f:facet name="header">
+            <h:outputText value="#{indexController.selectedRecipe == null ? 'Rezept' : indexController.selectedRecipe.name}"/>
+        </f:facet>
+        <h:outputText value="#{indexController.selectedRecipe == null ? 'Beschreibung' : indexController.selectedRecipe.description}"/>
+        <p:dataList var="productionStep" value="#{indexController.selectedRecipe.productionSteps}">
+            <f:facet name="header">
+                Produktionsschritte
+            </f:facet>
+            #{productionStep.name}
+            <p:dataTable var="ingredient" value="#{productionStep.neededIngredients}">
+                <p:column headerText="Zutat">
+                    <h:outputText value="#{ingredient.key.name}"/>
+                </p:column>
+                <p:column headerText="Menge">
+                    <h:outputText value="#{ingredient.value}"/>
+                </p:column>
+            </p:dataTable>
+            <h:outputText value="#{productionStep.description}"/>
+            <p:separator/>
+        </p:dataList>
+    </p:panelGrid>
+
+</h:body>
+</html>

@@ -1,0 +1,8 @@
+swarm:
+  datasources:
+    data-sources:
+      DbDS:
+        driver-name: derby
+        connection-url: jdbc:derby://localhost:1527/DbDS;create=true
+        user-name: APP
+        password: APP

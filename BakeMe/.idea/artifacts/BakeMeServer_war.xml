@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="BakeMeServer:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="bakeme.war">
+      <element id="artifact" artifact-name="BakeMeServer:war exploded" />
+    </root>
+  </artifact>
+</component>
